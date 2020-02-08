@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies</title>
+</head>
+<body>
+    <div class="table-responsive col-md-8">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">URL</th>
+                    <th scope="col">IMDB Rating</th>
+                    <th scope="col">Rating Count</th>
+                    <th scope="col">Director</th>
+                </tr>
+            </thead>
+                <tr>
+                {% for movie in movies %}
+                    <td> {{movie.title }} </td>
+                    <td> {{movie.url}} </td>
+                    <td> {{movie.imdbrating }} </td>
+                    <td> {{movie.ratingcount}} </td>
+                    <td> {{movie.director_id}} </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+         </div>
+</body>
+</html>

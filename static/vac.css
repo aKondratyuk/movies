@@ -1,0 +1,84 @@
+.f-vacancylist-foundblock {
+    display: none;
+}
+.f-vacancylist-companyname {
+    margin: 10px 0;
+}
+.fd-merchant {
+    font-size: 16px;
+}
+.f-text-dark-bluegray {
+    color: #78909C;
+}
+.f-vacancylist-vacancyblock a, .f-vacancylist-vacancyblock a:hover, .f-vacancylist-vacancyblock a:link {
+    text-decoration: none;
+}
+a.f-visited-enable:visited {
+    color: #9B6EC3;
+}
+.f-text-dark-bluegray {
+    color: #78909C;
+}
+a {
+    text-decoration: none;
+    color: #36c;
+    transition: opacity 0.3s ease;
+    background-color: transparent;
+}
+.f-vacancylist-characs-block {
+    margin: 10px 0;
+}
+.fd-f-left-middle {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.f-vacancylist-shortdescr {
+    margin-bottom: 0;
+    max-width: 675px;
+    word-wrap: break-word;
+}
+.fd-craftsmen {
+    font-size: 14px;
+}
+.f-text-gray {
+    color: #777;
+}
+.f-vacancylist-companylogo {
+    padding-left: 50px;
+}
+
+.fd-f-right-top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+.fd-f-left {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+}
+.vacancylist-tablewrap tr {
+    display: block;
+}
+.fd-f1 {
+    flex: 1;
+}
+div.hot-tip{
+    display: none;
+}
+div#special-needs-people{
+    display: none;
+}
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+article.f-vacancylist-vacancyblock {
+    max-width: 800px;
+    margin: 5px auto;
+}
