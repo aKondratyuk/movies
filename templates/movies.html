@@ -1,32 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Movies</title>
-</head>
-<body>
-    <div class="table-responsive col-md-8">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">URL</th>
-                    <th scope="col">IMDB Rating</th>
-                    <th scope="col">Rating Count</th>
-                    <th scope="col">Director</th>
-                </tr>
-            </thead>
+
+{% extends "index.html" %}
+
+{% block body %}
+
+<style>
+
+label {
+  padding: 4px 4px 4px 0;
+  display: block;
+}
+
+input[type=text], select {
+  width: 80%;
+  padding: 8px 8px;
+  margin: 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type=number], select {
+  width: 80%;
+  padding: 8px 8px;
+  margin: 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type=submit] {
+  width: 80%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <form class=""
+               action="{{url_for('movie')}}"
+               method="post">
+                {{ form.title.label }}
+                {{ form.title }}
+                {{ form.url.label }}
+                {{ form.url }}
+                {{ form.imdbrating.label }}
+                {{ form.imdbrating }}
+                {{ form.ratingcount.label }}
+                {{ form.ratingcount }}
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+        <div class="table-responsive col-md-8 table-hover">
+            <table class="table">
+                <thead-light>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">IMDB Rating</th>
+                        <th scope="col">Rating Count</th>
+                    </tr>
+                </thead-light>
                 <tr>
                 {% for movie in movies %}
-                    <td> {{movie.title }} </td>
-                    <td> {{movie.url}} </td>
-                    <td> {{movie.imdbrating }} </td>
-                    <td> {{movie.ratingcount}} </td>
-                    <td> {{movie.director_id}} </td>
+                    <td> {{ movie.title }}       </td>
+                    <td> {{ movie.url }}         </td>
+                    <td> {{ movie.imdbrating }}  </td>
+                    <td> {{ movie.ratingcount }} </td>
+                    <td><a href="/movies/edit/{{ movie.title }}" class="btn btn-success">Edit</a> </td>
+                    <td><a href="/movies/delete/{{ movie.title }}" class="btn btn-danger">Delete</a> </td>
                 </tr>
                 {% endfor %}
+
                 </tbody>
             </table>
          </div>
-</body>
-</html>
+     </div>
+</div>
+
+
+{% endblock %}
+
