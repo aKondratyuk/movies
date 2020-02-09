@@ -14,8 +14,11 @@
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 navbar-light border-bottom shadow-sm" style="background-image: url(http://127.0.0.1:5000/static/img/background.jpg); background-size: cover;">
     <h5 class="my-0 mr-md-auto font-weight-normal" style="color: white; border-radius: 5px; border: 2px solid whitesmoke; padding: 10px;">Kondratyuk AI Technologies</h5>
   <nav class="my-2 my-md-0 mr-md-3">
-    <a class="p-2 text-white" style="font-size: 20px;" href="/user">User</a>
-    <a class="p-2 text-white" style="font-size: 20px;" href="/movies">Movies</a>
+    {% if role != "<Role 1>" %}
+        {{ role }}
+        <a class="p-2 text-white" style="font-size: 20px;" href="/user">User</a>
+        <a class="p-2 text-white" style="font-size: 20px;" href="/movies">Movies</a>
+    {% endif %}
     <a class="p-2 text-white" style="font-size: 20px;" href="/usercode">User has Code</a>
     <a class="p-2 text-white" style="font-size: 20px;" href="/image_code">Image has Code</a>
     <a class="p-2 text-white" style="font-size: 20px;" href="/image">Image</a>

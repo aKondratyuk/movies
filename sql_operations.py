@@ -3,23 +3,34 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 
 Base.metadata.create_all(engine)
 
-session = Session()
+sessionq = Session()
 
 def check_movie_in_db(class_name, arg):
-    title = session.query(class_name).filter_by(title=arg).first()
+    title = sessionq.query(class_name).filter_by(title=arg).first()
     return title
 
+def check_user_in_db(class_name, arg):
+    user = sessionq.query(class_name).filter_by(email=arg).first()
+    return user
 
 def get_all_data(class_name):
-    return session.query(class_name).all()
+    return sessionq.query(class_name).all()
 
+def get_user_data(class_name):
+    return sessionq.query(class_name).join(class_name.role)
+
+def get_data_by_user_id(class_name, user_id):
+    return sessionq.query(class_name).filter_by(user_id=int(user_id)).first()
+
+def get_data_by_email(class_name, email):
+    return sessionq.query(class_name).filter_by(email=email).join(class_name.role).first()
 
 def get_data_by_id(class_name, id):
-    return session.query(class_name).filter_by(id=int(id)).first()
+    return sessionq.query(class_name).filter_by(id=int(id)).first()
 
 
 def get_data_by_title(class_name, title):
-    return session.query(class_name).filter_by(title=title).first()
+    return sessionq.query(class_name).filter_by(title=title).first()
 
 
 def insert_data(data):
@@ -37,6 +48,21 @@ def update_data(obj, class_name):
 
     session.query(class_name).filter_by(id=obj.id).update(mapped_values)
 
+
+def update_user(obj, class_name):
+    mapped_values = {}
+    for item in class_name.__dict__.items():
+        field_name = item[0]
+        field_type = item[1]
+        is_column = isinstance(field_type, InstrumentedAttribute)
+        if is_column:
+            mapped_values[field_name] = getattr(obj, field_name)
+
+    user = session.query(class_name).filter(class_name.email == mapped_values['email']).one()
+    user.email = mapped_values['email']
+    user.password = mapped_values['password']
+    user.date_of_birth = mapped_values['date_of_birth']
+    user.role_id = mapped_values['role_id']
 
 def update_movie(obj, class_name):
     mapped_values = {}
@@ -57,6 +83,10 @@ def update_movie(obj, class_name):
 def delete_movie(class_name, title):
     movie = session.query(class_name).filter_by(title=title).first()
     session.delete(movie)
+
+def delete_user(class_name, user_id):
+    user = session.query(class_name).filter_by(user_id=user_id).first()
+    session.delete(user)
 
 def delete_data(class_name, id):
     user = session.query(class_name).filter_by(id=id).first()

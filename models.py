@@ -67,11 +67,12 @@ class User(db.Model):
     role = db.relationship("Role", backref="user")
     movies = db.relationship('Movie', secondary=user_movie)
 
-    def __init__(self, user_id, email, password, date_of_birth):
+    def __init__(self, user_id, email, password, date_of_birth, role_id):
         self.user_id = user_id
         self.email = email
         self.password = password
         self.date_of_birth = date_of_birth
+        self.role_id = role_id
 
 
 class Role(db.Model):

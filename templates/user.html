@@ -11,15 +11,7 @@ label {
   display: block;
 }
 
-input[type=text], select {
-  width: 80%;
-  padding: 8px 8px;
-  margin: 0 0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-input[type=number], select {
+input[type=text],input[type=date], select {
   width: 80%;
   padding: 8px 8px;
   margin: 0 0;
@@ -48,7 +40,7 @@ input[type=submit]:hover {
     <div class="row">
         <div class="col-md-3">
             <form class=""
-               action="{{url_for('movie')}}"
+               action="{{url_for('user')}}"
                method="post">
                 <h3>{{ error }}</h3>
                 {{ wtf.quick_form(form) }}
@@ -58,20 +50,20 @@ input[type=submit]:hover {
             <table class="table">
                 <thead-light>
                     <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">URL</th>
-                        <th scope="col">IMDB Rating</th>
-                        <th scope="col">Rating Count</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">Birthday</th>
+                        <th scope="col">Role</th>
                     </tr>
                 </thead-light>
                 <tr>
-                {% for movie in movies %}
-                    <td> {{ movie.title }}       </td>
-                    <td> {{ movie.url }}         </td>
-                    <td> {{ movie.imdbrating }}  </td>
-                    <td> {{ movie.ratingcount }} </td>
-                    <td><a href="/movies/edit/{{ movie.title }}" class="btn btn-success">Edit</a> </td>
-                    <td><a href="/movies/delete/{{ movie.title }}" class="btn btn-danger">Delete</a> </td>
+                {% for user in users %}
+                    <td> {{ user.email }}       </td>
+                    <td> {{ user.password }}         </td>
+                    <td> {{ user.date_of_birth.strftime('%Y-%m-%d') }}  </td>
+                    <td> {{ user.role.role_name }} </td>
+                    <td><a href="/user/edit/{{ user.user_id }}" class="btn btn-success">Edit</a> </td>
+                    <td><a href="/user/delete/{{ user.user_id }}" class="btn btn-danger">Delete</a> </td>
                 </tr>
                 {% endfor %}
 

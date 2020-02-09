@@ -1,25 +1,20 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, validators, SubmitField, FloatField
-
+from wtforms import StringField, SubmitField, FloatField, PasswordField, DateField, IntegerField, HiddenField, SelectField
+from wtforms.validators import DataRequired, URL, Length, NumberRange, Email
 
 class MoviesForm(FlaskForm):
+    title = StringField("Title: ", validators=[DataRequired(), Length(1, 255, "Too long title!")])
+    url = StringField("URL: ", validators=[DataRequired(), URL(), Length(1, 1255, "Too long url!")])
+    imdbrating = FloatField("IMDB Rating: ", validators=[DataRequired(), NumberRange(0.0, 10.0, "Min rating 0 and max 10!")])
+    ratingcount = FloatField("Rating Count: ", validators=[DataRequired()])
+    submit = SubmitField("Save")
 
-   title = StringField("Title: ", [
-        validators.DataRequired("Please enter url"),
-   ])
 
-   url = StringField("URL: ",
-        [validators.DataRequired("Minimal work expirience required")]
-    )
+class UserForm(FlaskForm):
+    user_id = HiddenField("Id")
+    email = StringField("Email: ", validators=[DataRequired(), Length(1, 255, "Too long email!"), Email()])
+    password = StringField("Password: ", validators=[DataRequired(), Length(1, 2000, "Too long password!")])
+    date_of_birth = DateField("Birthday: ", validators=[DataRequired()])
+    role_id = SelectField("Role: ", choices=[("Admin", "Admin"), ("Moderator", "Moderator"), ("User", "User")], validators=[DataRequired()])
+    submit = SubmitField("Save")
 
-   imdbrating = FloatField("IMDB Rating: ", [
-       validators.DataRequired("Please enter your birthday."),
-       validators.length(4, 60, "Pleas select between 4 to 60")
-   ])
-
-   ratingcount = FloatField("Rating Count: ", [
-       validators.DataRequired("Please enter topic."),
-       validators.length(10, 100, "Pleas select between 10 to 100")
-    ])
-
-   submit = SubmitField("Save")
