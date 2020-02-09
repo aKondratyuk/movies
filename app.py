@@ -13,7 +13,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 Bootstrap(app)
 
-user_role = "User"
+user_role = "NotAuthorized"
+
 
 @app.route('/')
 def index():
@@ -58,7 +59,7 @@ def user():
          save()
          return redirect("/user")
 
-     return render_template("user.html", users=users, form=form)
+     return render_template("user.html", users=users, form=form, role=user_role)
 
 
 @app.route('/user/delete/<user_id>')
@@ -99,7 +100,7 @@ def movie():
         save()
         return redirect("/movies")
 
-    return render_template("movies.html", movies=movies, form=form)
+    return render_template("movies.html", movies=movies, form=form, role=user_role)
 
 
 @app.route('/movies/delete/<title>')
