@@ -15,6 +15,10 @@ def check_user_in_db(class_name, arg):
     user = sessionq.query(class_name).filter_by(email=arg).first()
     return user
 
+def check_director_in_db(class_name, arg):
+    director = sessionq.query(class_name).filter_by(director_id=arg).first()
+    return director
+
 def get_all_data(class_name):
     return sessionq.query(class_name).all()
 
@@ -81,6 +85,19 @@ def update_movie(obj, class_name):
     movie.imdbrating = mapped_values['imdbrating']
     movie.ratingcount = mapped_values['ratingcount']
 
+def update_director(obj, class_name):
+    mapped_values = {}
+    for item in class_name.__dict__.items():
+        field_name = item[0]
+        field_type = item[1]
+        is_column = isinstance(field_type, InstrumentedAttribute)
+        if is_column:
+            mapped_values[field_name] = getattr(obj, field_name)
+
+    director = sessionq.query(class_name).filter(class_name.director_id == mapped_values['director_id']).one()
+    director.first_name = mapped_values['first_name']
+    director.last_name = mapped_values['last_name']
+
 
 def delete_movie(class_name, title):
     movie = sessionq.query(class_name).filter_by(title=title).first()
@@ -93,6 +110,10 @@ def delete_user(class_name, user_id):
 def delete_data(class_name, id):
     user = sessionq.query(class_name).filter_by(id=id).first()
     sessionq.delete(user)
+
+def delete_director(class_name, director_id):
+    director = sessionq.query(class_name).filter_by(director_id=director_id).first()
+    sessionq.delete(director)
 
 def get_db_session_scope(sql_db_session):
     session = sql_db_session()
@@ -134,3 +155,9 @@ def update_user_movie(MyTable, rating, title, user_id):
     record_to_db(MyTable, user_id, title, rating)
     save()
     return
+
+def get_all_directors(Director, Movie):
+    return sessionq.query(Director.director_id, Director.first_name, Director.last_name, Movie.title).join(Movie, Director.director_id == Movie.director_id)
+
+def get_data_by_director_id(Director, director_id):
+    return sessionq.query(Director).filter_by(director_id=int(director_id)).first()

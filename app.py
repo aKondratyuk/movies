@@ -2,7 +2,7 @@ import random
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_bootstrap import Bootstrap
 from sql_operations import *
-from forms.movies_form import MoviesForm, UserForm, RegisterForm, RateForm
+from forms.movies_form import MoviesForm, UserForm, RegisterForm, RateForm, DirectorForm, GenreForm
 from models import *
 from db import db_string, secret
 
@@ -181,6 +181,60 @@ def delete_user_mov(title):
     delete_user_movie(user_movie, user_movieq.user_id, title)
     save()
     return redirect('/favorites')
+
+@app.route('/directors', methods=["GET", "POST"])
+def directors():
+    directors = get_all_directors(Director, Movie)
+    form = DirectorForm()
+    print(directors)
+    if request.method == "POST" and form.validate_on_submit():
+        if check_director_in_db(Director, form.director_id.data) is None:
+            director = Director(first_name=form.first_name.data, last_name=form.last_name.data)
+            insert_data(director)
+        else:
+            director = Director(director_id=form.director_id.data, first_name=form.first_name.data, last_name=form.last_name.data)
+            update_director(director, Director)
+        save()
+        return redirect("/directors")
+    return render_template('directors.html', directors=directors, role=user_role, form=form)
+
+@app.route('/directors/delete/<director_id>')
+def director_delete(director_id):
+    delete_director(Director, director_id)
+    save()
+    return redirect('/directors')
+
+
+@app.route('/directors/edit/<director_id>', methods=["GET"])
+def director_edit(director_id):
+    director = get_data_by_director_id(Director, director_id)
+    directors = get_all_directors(Director, Movie)
+    form = DirectorForm()
+    if request.method == "GET":
+        form.director_id.data = director.director_id
+        form.first_name.data = director.first_name
+        form.last_name.data = director.last_name
+        return render_template('directors.html', directors=directors, form=form, role=user_role)
+
+
+@app.route("/genres", methods=["GET", "POST"])
+def genre():
+    genres = get_all_data(Genre)
+    form = GenreForm(request.form)
+    # if request.method == "POST" and form.validate_on_submit():
+    #
+    #     if check_movie_in_db(Movie, form.title.data) is None:
+    #         movie = Movie(title=form.title.data, url=form.url.data, imdbrating=form.imdbrating.data,
+    #                       ratingcount=form.ratingcount.data)
+    #         insert_data(movie)
+    #     else:
+    #         movie = Movie(title=form.title.data, url=form.url.data, imdbrating=form.imdbrating.data,
+    #                       ratingcount=form.ratingcount.data)
+    #         update_movie(movie, Movie)
+    #     save()
+    #     return redirect("/movies")
+
+    return render_template("genres.html", genres=genres, form=form, role=user_role)
 
 if __name__ == "__main__":
     app.run()

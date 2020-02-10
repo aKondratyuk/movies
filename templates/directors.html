@@ -1,0 +1,81 @@
+{% if role == "NotAuthorized" %}<h1>You are not authorized. <a href="/logout">Login</a></h1>{% endif %}
+{%  if not role == "NotAuthorized" %}
+{% extends "index.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block body %}
+
+<style>
+
+label {
+  padding: 4px 4px 4px 0;
+  display: block;
+}
+
+input[type=text],input[type=date], select {
+  width: 80%;
+  padding: 8px 8px;
+  margin: 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type=submit] {
+  width: 80%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+</style>
+<div class="container-fluid">
+    <div class="row">
+        {% if role == "Admin" or role == "Moderator"%}
+        <div class="col-md-3">
+            <form class=""
+               action="{{url_for('directors')}}"
+               method="post">
+                <h3>{{ error }}</h3>
+                {{ wtf.quick_form(form) }}
+            </form>
+        </div>
+        <div class="table-responsive col-md-8 table-hover">
+        {% endif %}
+        {% if role == "User"%}
+        <div class="table-responsive table-hover">
+        {% endif %}
+            <table class="table">
+                <thead-light>
+                    <tr>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Film Title</th>
+                    </tr>
+                </thead-light>
+                <tr>
+                {% for director in directors %}
+                    <td> {{ director.first_name }} </td>
+                    <td> {{ director.last_name }}  </td>
+                    <td> {{ director.title }} </td>
+                    {% if role == "Admin" or role == "Moderator" %}
+                    <td><a href="/directors/edit/{{ director.director_id }}" class="btn btn-success">Edit</a> </td>
+                    <td><a href="/directors/delete/{{ director.director_id }}" class="btn btn-danger">Delete</a> </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+         </div>
+     </div>
+</div>
+
+{% endblock %}
+
+{% endif %}

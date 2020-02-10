@@ -30,3 +30,14 @@ class RateForm(FlaskForm):
     title = HiddenField("title")
     rating = FloatField("My Rating: ", validators=[NumberRange(0.0, 10.0, "Min rating 0 and max 10!")])
     submit = SubmitField("Save")
+
+class DirectorForm(FlaskForm):
+    director_id = HiddenField("Id")
+    first_name = StringField("First Name: ", validators=[DataRequired(), Length(1, 255, "Too long first name!")])
+    last_name = StringField("Last Name: ", validators=[DataRequired(), Length(1, 255, "Too long last name!")])
+    submit = SubmitField("Save")
+
+class GenreForm(FlaskForm):
+    genre_id = HiddenField("genre_id")
+    genre_name = StringField("Genre Name: ", validators=[DataRequired(), Length(1, 255, "Too long first name!")])
+    submit = SubmitField("Save")
