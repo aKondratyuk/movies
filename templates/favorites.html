@@ -47,40 +47,29 @@ input[type=submit]:hover {
 
 <div class="container-fluid">
     <div class="row">
-    {% if role != "User" %}
         <div class="col-md-3">
             <form class=""
-               action="{{url_for('movie')}}"
+               action="{{url_for('favorites')}}"
                method="post">
                 <h3>{{ error }}</h3>
+                <h3>{{ title }}</h3>
                 {{ wtf.quick_form(form) }}
             </form>
         </div>
         <div class="table-responsive col-md-8 table-hover">
-    {% endif %}
-    {% if role == "User" %}
-        <div class="table-responsive table-hover">
-    {% endif %}
             <table class="table">
                 <thead-light>
                     <tr>
                         <th scope="col">Title</th>
-                        <th scope="col">URL</th>
-                        <th scope="col">IMDB Rating</th>
-                        <th scope="col">Rating Count</th>
+                        <th scope="col">My Rating</th>
                     </tr>
                 </thead-light>
                 <tr>
-                {% for movie in movies %}
-                    <td> {{ movie.title }}       </td>
-                    <td> {{ movie.url }}         </td>
-                    <td> {{ movie.imdbrating }}  </td>
-                    <td> {{ movie.ratingcount }} </td>
-                    {% if role != "User" %}
-                    <td><a href="/movies/edit/{{ movie.title }}" class="btn btn-success">Edit</a> </td>
-                    <td><a href="/movies/delete/{{ movie.title }}" class="btn btn-danger">Delete</a> </td>
-                    {% endif %}
-                    <td><a href="/movies/like/{{ movie.title }}" class="btn btn-warning">Favorite</a> </td>
+                {% for user_movie in user_movies %}
+                    <td> {{ user_movie.title }}       </td>
+                    <td> {{ user_movie.user_rating }} </td>
+                    <td><a href="/favorites/rate/{{ user_movie.title }}" class="btn btn-info">Rate it</a> </td>
+                    <td><a href="/favorites/delete/{{ user_movie.title }}" class="btn btn-danger">Delete</a> </td>
                 </tr>
                 {% endfor %}
 

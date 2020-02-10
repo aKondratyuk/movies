@@ -1,3 +1,5 @@
+from sqlalchemy import and_
+
 from db import engine, Base, Session
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 
@@ -92,6 +94,43 @@ def delete_data(class_name, id):
     user = sessionq.query(class_name).filter_by(id=id).first()
     sessionq.delete(user)
 
+def get_db_session_scope(sql_db_session):
+    session = sql_db_session()
+    try:
+        yield session
+        session.commit()
+    except:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 def save():
     sessionq.commit()
+
+def get_user_movie(class_name, user_id, title):
+    return sessionq.query(class_name).filter_by(user_id=user_id, title=title).first()
+
+def get_all_user_movie(class_name, user_id):
+    return sessionq.query(class_name).filter_by(user_id=user_id).all()
+
+def record_to_db(MyTable, user_id, title, rating=None):
+    insert_stmnt = MyTable.insert().values(user_id=user_id, title=title, user_rating=rating)
+    sessionq.execute(insert_stmnt)
+    save()
+    return
+
+def delete_user_movie(MyTable, user_id, title):
+    q = MyTable.delete().where(
+       and_(
+           MyTable.c.user_id == user_id,
+           MyTable.c.title == title
+       )
+    )
+    sessionq.execute(q)
+
+def update_user_movie(MyTable, rating, title, user_id):
+    delete_user_movie(MyTable, user_id, title)
+    record_to_db(MyTable, user_id, title, rating)
+    save()
+    return

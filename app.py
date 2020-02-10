@@ -2,7 +2,7 @@ import random
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_bootstrap import Bootstrap
 from sql_operations import *
-from forms.movies_form import MoviesForm, UserForm, RegisterForm
+from forms.movies_form import MoviesForm, UserForm, RegisterForm, RateForm
 from models import *
 from db import db_string, secret
 
@@ -27,12 +27,12 @@ def index():
 @app.route('/login', methods=['POST'])
 def do_admin_login():
     user = get_data_by_email(User, request.form['email'])
-
-    if request.form['password'] == user.password and request.form['email'] == user.email:
-        session['logged_in'] = True
-        global user_role, user_email
-        user_role = user.role.role_name
-        user_email = user.email
+    if user != None:
+        if request.form['password'] == user.password and request.form['email'] == user.email:
+            session['logged_in'] = True
+            global user_role, user_email
+            user_role = user.role.role_name
+            user_email = user.email
     return index()
 
 @app.route("/logout")
@@ -142,6 +142,45 @@ def movie_edit(title):
         form.ratingcount.data = movie.ratingcount
         return render_template('movies.html', movies=movies, form=form)
 
+@app.route('/movies/like/<title>')
+def like(title):
+    movie = get_data_by_title(Movie, title)
+    user = get_data_by_email(User, user_email)
+    user_movieq = get_user_movie(user_movie, user.user_id, movie.title)
+    if user_movieq is None:
+        record_to_db(user_movie, user.user_id, movie.title)
+    return redirect('/movies')
+
+@app.route('/favorites', methods=["GET", "POST"])
+def favorites():
+    form = RateForm()
+    user = get_data_by_email(User, user_email)
+    user_movies = get_all_user_movie(user_movie, user.user_id)
+    if request.method == "POST" and form.validate_on_submit():
+        update_user_movie(user_movie, rating=form.rating.data, title=form.title.data, user_id=form.user_id.data)
+        return redirect('/favorites')
+    return render_template('favorites.html', user_movies=user_movies, form=form)
+
+@app.route('/favorites/rate/<title>', methods=["GET"])
+def rate(title):
+    user = get_data_by_email(User, user_email)
+    user_movies = get_all_user_movie(user_movie, user.user_id)
+    user_movieq = get_user_movie(user_movie, user.user_id, title)
+    form = RateForm(request.form)
+    if request.method == "GET":
+        print(user_movieq)
+        form.user_id.data = user_movieq.user_id
+        form.title.data = title
+        form.rating.data = user_movieq.user_rating
+    return render_template('favorites.html', user_movies=user_movies, form=form, title=title)
+
+@app.route('/favorites/delete/<title>', methods=["GET"])
+def delete_user_mov(title):
+    user = get_data_by_email(User, user_email)
+    user_movieq = get_user_movie(user_movie, user.user_id, title)
+    delete_user_movie(user_movie, user_movieq.user_id, title)
+    save()
+    return redirect('/favorites')
 
 if __name__ == "__main__":
     app.run()

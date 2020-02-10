@@ -25,3 +25,8 @@ class RegisterForm(FlaskForm):
     date_of_birth = DateField("Birthday: ", validators=[DataRequired()])
     submit = SubmitField("Save")
 
+class RateForm(FlaskForm):
+    user_id = HiddenField("user_id")
+    title = HiddenField("title")
+    rating = FloatField("My Rating: ", validators=[NumberRange(0.0, 10.0, "Min rating 0 and max 10!")])
+    submit = SubmitField("Save")
