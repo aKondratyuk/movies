@@ -2,7 +2,7 @@ import random
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_bootstrap import Bootstrap
 from sql_operations import *
-from forms.movies_form import MoviesForm, UserForm
+from forms.movies_form import MoviesForm, UserForm, RegisterForm
 from models import *
 from db import db_string, secret
 
@@ -14,7 +14,7 @@ db.init_app(app)
 Bootstrap(app)
 
 user_role = "NotAuthorized"
-
+user_email = ""
 
 @app.route('/')
 def index():
@@ -30,8 +30,9 @@ def do_admin_login():
 
     if request.form['password'] == user.password and request.form['email'] == user.email:
         session['logged_in'] = True
-        global user_role
+        global user_role, user_email
         user_role = user.role.role_name
+        user_email = user.email
     return index()
 
 @app.route("/logout")
@@ -39,17 +40,34 @@ def logout():
     session['logged_in'] = False
     return index()
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegisterForm(request.form)
+    error = ""
+    if request.method == "POST" and form.validate_on_submit():
+        print(form.email.data)
+        if check_user_in_db(User, form.email.data) is None:
+            user = User(user_id=int(random.getrandbits(31)), email=form.email.data, password=form.password.data,
+                        date_of_birth=form.date_of_birth.data, role_id=3)
+            insert_data(user)
+            save()
+            return redirect("/register")
+        else:
+            error = "Email already exists!"
+
+    return render_template("register.html", form=form, error=error)
 
 @app.route("/user", methods=["GET", "POST"])
 def user():
      users = get_user_data(User)
+     if user_role == "User":
+         users = get_data_by_email(User, user_email)
      form = UserForm(request.form)
      if request.method == "POST" and form.validate_on_submit():
          roles = {"Admin" : 1, "Moderator" : 2, "User" : 3}
          role_id = roles[form.role_id.data]
          print(form.role_id)
          print(role_id)
-
          if check_user_in_db(User, form.email.data) is None:
              user = User(user_id = int(random.getrandbits(31)), email=form.email.data, password=form.password.data, date_of_birth=form.date_of_birth.data, role_id=role_id)
              insert_data(user)
@@ -58,7 +76,6 @@ def user():
              update_user(user, User)
          save()
          return redirect("/user")
-
      return render_template("user.html", users=users, form=form, role=user_role)
 
 
@@ -80,7 +97,7 @@ def user_edit(user_id):
         form.password.data = user.password
         form.date_of_birth.data = user.date_of_birth
         form.role_id.data = user.role_id
-        return render_template('user.html', users=users, form=form)
+        return render_template('user.html', users=users, form=form, role=user_role)
 
 @app.route("/movies", methods=["GET", "POST"])
 def movie():

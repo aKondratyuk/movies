@@ -1,0 +1,50 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% block body %}
+
+<style>
+
+label {
+  padding: 4px 4px 4px 0;
+  display: block;
+}
+
+input[type=text],input[type=date], select {
+  width: 80%;
+  padding: 8px 8px;
+  margin: 0 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type=submit] {
+  width: 80%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <form class=""
+               action="{{url_for('register')}}"
+               method="post">
+                <h3>{{ error }}</h3>
+                {{ wtf.quick_form(form) }}
+            </form>
+        </div>
+     </div>
+</div>
+
+
+{% endblock %}

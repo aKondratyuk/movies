@@ -15,6 +15,13 @@ class UserForm(FlaskForm):
     email = StringField("Email: ", validators=[DataRequired(), Length(1, 255, "Too long email!"), Email()])
     password = StringField("Password: ", validators=[DataRequired(), Length(1, 2000, "Too long password!")])
     date_of_birth = DateField("Birthday: ", validators=[DataRequired()])
-    role_id = SelectField("Role: ", choices=[("Admin", "Admin"), ("Moderator", "Moderator"), ("User", "User")], validators=[DataRequired()])
+    role_id = SelectField("Role: ", choices=[("Admin", "Admin"), ("Moderator", "Moderator"), ("User", "User")])
+    submit = SubmitField("Save")
+
+class RegisterForm(FlaskForm):
+    user_id = HiddenField("Id")
+    email = StringField("Email: ", validators=[DataRequired(), Length(1, 255, "Too long email!"), Email()])
+    password = StringField("Password: ", validators=[DataRequired(), Length(1, 2000, "Too long password!")])
+    date_of_birth = DateField("Birthday: ", validators=[DataRequired()])
     submit = SubmitField("Save")
 

@@ -47,6 +47,7 @@ input[type=submit]:hover {
 
 <div class="container-fluid">
     <div class="row">
+    {% if role != "User" %}
         <div class="col-md-3">
             <form class=""
                action="{{url_for('movie')}}"
@@ -56,6 +57,10 @@ input[type=submit]:hover {
             </form>
         </div>
         <div class="table-responsive col-md-8 table-hover">
+    {% endif %}
+    {% if role == "User" %}
+        <div class="table-responsive table-hover">
+    {% endif %}
             <table class="table">
                 <thead-light>
                     <tr>
@@ -71,8 +76,10 @@ input[type=submit]:hover {
                     <td> {{ movie.url }}         </td>
                     <td> {{ movie.imdbrating }}  </td>
                     <td> {{ movie.ratingcount }} </td>
+                    {% if role != "User" %}
                     <td><a href="/movies/edit/{{ movie.title }}" class="btn btn-success">Edit</a> </td>
                     <td><a href="/movies/delete/{{ movie.title }}" class="btn btn-danger">Delete</a> </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
 

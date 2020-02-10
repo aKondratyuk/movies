@@ -34,7 +34,7 @@ def get_data_by_title(class_name, title):
 
 
 def insert_data(data):
-    session.add(data)
+    sessionq.add(data)
 
 
 def update_data(obj, class_name):
@@ -46,7 +46,7 @@ def update_data(obj, class_name):
         if is_column:
             mapped_values[field_name] = getattr(obj, field_name)
 
-    session.query(class_name).filter_by(id=obj.id).update(mapped_values)
+    sessionq.query(class_name).filter_by(id=obj.id).update(mapped_values)
 
 
 def update_user(obj, class_name):
@@ -58,7 +58,7 @@ def update_user(obj, class_name):
         if is_column:
             mapped_values[field_name] = getattr(obj, field_name)
 
-    user = session.query(class_name).filter(class_name.email == mapped_values['email']).one()
+    user = sessionq.query(class_name).filter(class_name.email == mapped_values['email']).one()
     user.email = mapped_values['email']
     user.password = mapped_values['password']
     user.date_of_birth = mapped_values['date_of_birth']
@@ -73,7 +73,7 @@ def update_movie(obj, class_name):
         if is_column:
             mapped_values[field_name] = getattr(obj, field_name)
 
-    movie = session.query(class_name).filter(class_name.title == mapped_values['title']).one()
+    movie = sessionq.query(class_name).filter(class_name.title == mapped_values['title']).one()
     movie.title = mapped_values['title']
     movie.url = mapped_values['url']
     movie.imdbrating = mapped_values['imdbrating']
@@ -81,17 +81,17 @@ def update_movie(obj, class_name):
 
 
 def delete_movie(class_name, title):
-    movie = session.query(class_name).filter_by(title=title).first()
-    session.delete(movie)
+    movie = sessionq.query(class_name).filter_by(title=title).first()
+    sessionq.delete(movie)
 
 def delete_user(class_name, user_id):
-    user = session.query(class_name).filter_by(user_id=user_id).first()
-    session.delete(user)
+    user = sessionq.query(class_name).filter_by(user_id=user_id).first()
+    sessionq.delete(user)
 
 def delete_data(class_name, id):
-    user = session.query(class_name).filter_by(id=id).first()
-    session.delete(user)
+    user = sessionq.query(class_name).filter_by(id=id).first()
+    sessionq.delete(user)
 
 
 def save():
-    session.commit()
+    sessionq.commit()
